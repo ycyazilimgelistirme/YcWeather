@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hava Durumu - Premium</title>
+    <title>Hava Durumu - Ultimate</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -28,22 +28,22 @@
 
         /* Glassmorphism Kartlar */
         .glass-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
             border-radius: 1.5rem;
         }
 
         .glass-input {
-            background: rgba(0, 0, 0, 0.2);
+            background: rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.1);
             color: white;
             transition: all 0.3s ease;
         }
         .glass-input:focus {
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(0, 0, 0, 0.5);
             border-color: rgba(255, 255, 255, 0.3);
             outline: none;
         }
@@ -59,11 +59,11 @@
         }
         .chart-area {
             fill: url(#gradientArea);
-            opacity: 0.3;
+            opacity: 0.2;
         }
         .rain-bar {
-            fill: rgba(59, 130, 246, 0.6); /* Blue-500 */
-            rx: 2; /* Rounded corners */
+            fill: rgba(96, 165, 250, 0.7); /* Blue-400 */
+            rx: 2;
             transition: height 0.3s;
         }
 
@@ -77,7 +77,7 @@
         /* Animasyonlar */
         @keyframes float {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+            50% { transform: translateY(-12px); }
         }
         .animate-float { animation: float 6s ease-in-out infinite; }
 
@@ -91,13 +91,16 @@
         .details-content {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.4s cubic-bezier(0, 1, 0, 1);
-            opacity: 0.5;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s;
+            opacity: 0;
         }
         .details-content.open {
             max-height: 200px;
             opacity: 1;
-            transition: max-height 0.4s ease-in-out, opacity 0.4s;
+            padding-top: 1rem;
+        }
+        .chevron-icon {
+            transition: transform 0.3s ease;
         }
         
         /* Arama Sonuçları */
@@ -114,17 +117,18 @@
 <body class="text-white min-h-screen relative flex flex-col items-center pb-10">
 
     <!-- Dinamik Arka Plan Katmanı -->
-    <div id="bg-layer" class="fixed inset-0 z-[-1] bg-gradient-to-br from-blue-500 to-blue-900">
+    <div id="bg-layer" class="fixed inset-0 z-[-1] bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
         <!-- Atmosferik Glow Efektleri -->
         <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-            <div id="glow-1" class="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] bg-white/10 rounded-full blur-[100px] animate-float"></div>
-            <div id="glow-2" class="absolute bottom-[-10%] right-[-10%] w-[60vw] h-[60vw] bg-black/20 rounded-full blur-[120px] animate-float" style="animation-delay: 2s"></div>
+            <div id="glow-1" class="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] bg-blue-500/20 rounded-full blur-[120px] animate-float"></div>
+            <div id="glow-2" class="absolute bottom-[-10%] right-[-10%] w-[60vw] h-[60vw] bg-indigo-500/20 rounded-full blur-[120px] animate-float" style="animation-delay: 2s"></div>
         </div>
     </div>
 
     <!-- Yükleme -->
-    <div id="loader" class="fixed inset-0 z-50 bg-slate-900 flex flex-col items-center justify-center transition-opacity duration-500">
-        <div class="w-12 h-12 border-4 border-white/20 border-t-white rounded-full animate-spin"></div>
+    <div id="loader" class="fixed inset-0 z-50 bg-[#0f172a] flex flex-col items-center justify-center transition-opacity duration-500">
+        <div class="w-16 h-16 border-4 border-blue-500/30 border-t-blue-400 rounded-full animate-spin"></div>
+        <p class="mt-4 text-xs tracking-widest text-blue-300 animate-pulse">HAZIRLANIYOR...</p>
     </div>
 
     <!-- İçerik -->
@@ -133,21 +137,28 @@
         <!-- Üst Kısım -->
         <header class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8 animate-slide-up">
             <div>
-                <div class="flex items-center gap-2 text-white/80 mb-1">
+                <div class="flex items-center gap-2 text-blue-300 mb-1">
                     <i class="ph-fill ph-map-pin"></i>
                     <span id="location-country" class="text-xs font-bold tracking-widest uppercase">KONUM</span>
                 </div>
-                <h1 id="location-city" class="text-4xl md:text-5xl font-bold tracking-tight drop-shadow-md">Yükleniyor...</h1>
-                <p id="current-date" class="text-white/60 text-sm font-medium mt-1">--</p>
+                <h1 id="location-city" class="text-4xl md:text-5xl font-bold tracking-tight drop-shadow-xl">Yükleniyor...</h1>
+                <p id="current-date" class="text-white/50 text-sm font-medium mt-1">--</p>
             </div>
 
-            <div class="relative w-full md:w-96 group z-40">
-                <i class="ph ph-magnifying-glass absolute left-4 top-3.5 text-white/50 text-lg"></i>
-                <input type="text" id="search-input" 
-                    class="glass-input w-full py-3 pl-11 pr-4 rounded-xl text-sm placeholder-white/50" 
-                    placeholder="Şehir ara... (örn: İstanbul, Ankara)" autocomplete="off">
-                
-                <div id="search-results" class="absolute top-full left-0 right-0 mt-2 glass-card bg-black/40 backdrop-blur-xl overflow-y-auto rounded-xl"></div>
+            <div class="flex items-center gap-3 w-full md:w-auto z-40">
+                <!-- GPS Butonu -->
+                <button onclick="getLocationByIP()" class="glass-input p-3 rounded-xl hover:bg-white/20 transition active:scale-95" title="Konumuma Git">
+                    <i class="ph-fill ph-crosshair text-xl"></i>
+                </button>
+
+                <div class="relative w-full md:w-80 group">
+                    <i class="ph ph-magnifying-glass absolute left-4 top-3.5 text-white/50 text-lg"></i>
+                    <input type="text" id="search-input" 
+                        class="glass-input w-full py-3 pl-11 pr-4 rounded-xl text-sm placeholder-white/40" 
+                        placeholder="Şehir ara... (örn: İzmir)" autocomplete="off">
+                    
+                    <div id="search-results" class="absolute top-full left-0 right-0 mt-2 glass-card bg-[#0f172a]/90 backdrop-blur-xl overflow-y-auto rounded-xl custom-scroll"></div>
+                </div>
             </div>
         </header>
 
@@ -166,34 +177,34 @@
                                 <span id="weather-desc" class="text-xs font-bold uppercase tracking-wider">--</span>
                             </div>
                             <div class="flex items-start">
-                                <span id="main-temp" class="text-[7rem] md:text-[9rem] font-bold leading-none tracking-tighter drop-shadow-lg">--</span>
+                                <span id="main-temp" class="text-[7rem] md:text-[9rem] font-bold leading-none tracking-tighter drop-shadow-2xl">--</span>
                                 <span class="text-5xl font-light text-white/60 mt-4">°</span>
                             </div>
                         </div>
-                        <!-- Dinamik İkon (Rengi JS ile ayarlanacak) -->
-                        <i id="main-icon" class="ph-fill ph-sun text-[9rem] md:text-[12rem] drop-shadow-2xl animate-float opacity-90"></i>
+                        <!-- Dinamik İkon (Beyaz Bulutlar / Sarı Güneş) -->
+                        <i id="main-icon" class="ph-fill ph-sun text-[9rem] md:text-[12rem] drop-shadow-2xl animate-float opacity-90 transition-colors duration-500"></i>
                     </div>
 
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 relative z-10 mt-4">
-                        <div class="bg-white/5 rounded-xl p-3 backdrop-blur-sm">
+                        <div class="bg-white/5 rounded-xl p-3 backdrop-blur-sm border border-white/5">
                             <p class="text-[10px] text-white/60 font-bold uppercase mb-1">Hissedilen</p>
                             <p id="feels-like" class="text-xl font-bold">--°</p>
                         </div>
-                        <div class="bg-white/5 rounded-xl p-3 backdrop-blur-sm">
+                        <div class="bg-white/5 rounded-xl p-3 backdrop-blur-sm border border-white/5">
                             <p class="text-[10px] text-white/60 font-bold uppercase mb-1">Min / Max</p>
                             <p id="min-max" class="text-xl font-bold">-- / --</p>
                         </div>
-                        <div class="bg-white/5 rounded-xl p-3 backdrop-blur-sm">
+                        <div class="bg-white/5 rounded-xl p-3 backdrop-blur-sm border border-white/5">
                             <p class="text-[10px] text-white/60 font-bold uppercase mb-1">Nem</p>
                             <div class="flex items-center gap-1">
                                 <i class="ph-fill ph-drop text-blue-300"></i>
                                 <span id="humidity" class="text-xl font-bold">--%</span>
                             </div>
                         </div>
-                        <div class="bg-white/5 rounded-xl p-3 backdrop-blur-sm">
+                        <div class="bg-white/5 rounded-xl p-3 backdrop-blur-sm border border-white/5">
                             <p class="text-[10px] text-white/60 font-bold uppercase mb-1">Rüzgar</p>
-                            <div class="flex items-center gap-1">
-                                <i class="ph-fill ph-wind text-white/70"></i>
+                            <div class="flex items-center gap-2">
+                                <i id="wind-icon" class="ph-fill ph-navigation-arrow text-blue-300 transform transition-transform duration-700"></i>
                                 <span id="wind" class="text-xl font-bold">--</span>
                             </div>
                         </div>
@@ -204,12 +215,12 @@
                 <div class="glass-card p-6 animate-slide-up" style="animation-delay: 0.1s;">
                     <div class="flex items-center justify-between mb-6">
                         <h3 class="text-lg font-bold flex items-center gap-2">
-                            <i class="ph-fill ph-chart-line-up"></i>
+                            <i class="ph-fill ph-chart-line-up text-blue-400"></i>
                             24 Saatlik Trend
                         </h3>
                         <div class="flex items-center gap-4 text-xs text-white/50">
                             <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-white"></span> Sıcaklık</span>
-                            <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-sm bg-blue-500/60"></span> Yağış %</span>
+                            <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-sm bg-blue-400"></span> Yağış %</span>
                         </div>
                     </div>
 
@@ -221,7 +232,7 @@
                             <svg id="hourly-chart" class="absolute top-0 left-0 h-[140px] overflow-visible z-10" preserveAspectRatio="none">
                                 <defs>
                                     <linearGradient id="gradientArea" x1="0%" y1="0%" x2="0%" y2="100%">
-                                        <stop offset="0%" stop-color="#ffffff" stop-opacity="0.3" />
+                                        <stop offset="0%" stop-color="#ffffff" stop-opacity="0.25" />
                                         <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
                                     </linearGradient>
                                 </defs>
@@ -246,22 +257,22 @@
                 
                 <!-- Detay Grid -->
                 <div class="grid grid-cols-2 gap-4 animate-slide-up" style="animation-delay: 0.2s;">
-                    <div class="glass-card p-4 flex flex-col items-center text-center justify-center aspect-[4/3]">
+                    <div class="glass-card p-4 flex flex-col items-center text-center justify-center aspect-[4/3] hover:bg-white/5 transition">
                         <i class="ph-duotone ph-sun-dim text-3xl text-orange-300 mb-2"></i>
                         <span class="text-[10px] text-white/60 font-bold uppercase">UV İndeks</span>
                         <span id="uv-index" class="text-2xl font-bold mt-1">--</span>
                     </div>
-                    <div class="glass-card p-4 flex flex-col items-center text-center justify-center aspect-[4/3]">
-                        <i class="ph-duotone ph-eye text-3xl text-blue-200 mb-2"></i>
+                    <div class="glass-card p-4 flex flex-col items-center text-center justify-center aspect-[4/3] hover:bg-white/5 transition">
+                        <i class="ph-duotone ph-eye text-3xl text-blue-300 mb-2"></i>
                         <span class="text-[10px] text-white/60 font-bold uppercase">Görüş</span>
                         <span id="visibility" class="text-xl font-bold mt-1">--</span>
                     </div>
-                    <div class="glass-card p-4 flex flex-col items-center text-center justify-center aspect-[4/3]">
+                    <div class="glass-card p-4 flex flex-col items-center text-center justify-center aspect-[4/3] hover:bg-white/5 transition">
                         <i class="ph-duotone ph-gauge text-3xl text-purple-300 mb-2"></i>
                         <span class="text-[10px] text-white/60 font-bold uppercase">Basınç</span>
                         <span id="pressure" class="text-xl font-bold mt-1">--</span>
                     </div>
-                    <div class="glass-card p-4 flex flex-col items-center text-center justify-center aspect-[4/3]">
+                    <div class="glass-card p-4 flex flex-col items-center text-center justify-center aspect-[4/3] hover:bg-white/5 transition">
                         <i class="ph-duotone ph-sun-horizon text-3xl text-yellow-200 mb-2"></i>
                         <span class="text-[10px] text-white/60 font-bold uppercase">Gün Doğumu</span>
                         <span id="sunrise" class="text-xl font-bold mt-1">--:--</span>
@@ -270,8 +281,8 @@
 
                 <!-- Haftalık Liste -->
                 <div class="glass-card p-6 min-h-[400px] animate-slide-up" style="animation-delay: 0.3s;">
-                    <div class="flex items-center gap-2 mb-5 opacity-80">
-                        <i class="ph-fill ph-calendar-blank"></i>
+                    <div class="flex items-center gap-2 mb-5 opacity-90">
+                        <i class="ph-fill ph-calendar-blank text-blue-300"></i>
                         <h3 class="font-bold text-lg">7 Günlük Tahmin</h3>
                     </div>
                     <div class="flex flex-col gap-2" id="daily-list">
@@ -282,26 +293,29 @@
             </div>
         </div>
 
-        <footer class="mt-12 text-center text-white/40 text-xs pb-6">
-            <p>Open-Meteo Verileri Kullanılmaktadır</p>
+        <footer class="mt-12 text-center text-white/30 text-xs pb-6">
+            <p>Open-Meteo Verileri • Ultimate Weather Experience</p>
         </footer>
     </main>
 
     <script>
         // --- AYARLAR ---
         const CONFIG = {
-            hourWidth: 70, // Saat başına piksel
+            hourWidth: 70, 
             chartHeight: 140
         };
 
+        // İkon ve Renk Haritası
+        // Bulutlu durumlar için renk 'text-white' yapıldı.
         const weatherCodes = {
             0: { desc: "Açık", icon: "ph-sun", color: "text-yellow-400" },
-            1: { desc: "Az Bulutlu", icon: "ph-cloud-sun", color: "text-white" }, // Güncellendi
-            2: { desc: "Parçalı Bulutlu", icon: "ph-cloud", color: "text-white" }, // Güncellendi
-            3: { desc: "Kapalı", icon: "ph-cloud", color: "text-white" }, // Güncellendi
-            45: { desc: "Sisli", icon: "ph-cloud-fog", color: "text-white" }, // Güncellendi
+            1: { desc: "Az Bulutlu", icon: "ph-cloud-sun", color: "text-white" },
+            2: { desc: "Parçalı Bulutlu", icon: "ph-cloud", color: "text-white" },
+            3: { desc: "Kapalı", icon: "ph-cloud", color: "text-white" },
+            45: { desc: "Sisli", icon: "ph-cloud-fog", color: "text-white" },
             51: { desc: "Çiseleme", icon: "ph-drop", color: "text-blue-300" },
             61: { desc: "Yağmur", icon: "ph-cloud-rain", color: "text-blue-400" },
+            63: { desc: "Yoğun Yağmur", icon: "ph-cloud-rain", color: "text-blue-500" },
             71: { desc: "Kar", icon: "ph-snowflake", color: "text-white" },
             95: { desc: "Fırtına", icon: "ph-lightning", color: "text-yellow-400" }
         };
@@ -321,14 +335,18 @@
             let gradient = "";
 
             if (!isDay) {
-                gradient = "linear-gradient(to bottom right, #0f172a, #1e1b4b, #312e81)";
+                // Gece Teması
+                gradient = "linear-gradient(to bottom right, #020617, #1e1b4b, #0f172a)";
             } else {
                 if (code <= 2) {
-                    gradient = "linear-gradient(to bottom right, #3b82f6, #2563eb, #1d4ed8)";
-                } else if (code >= 51) {
+                    // Güneşli: Canlı Mavi
+                    gradient = "linear-gradient(to bottom right, #3b82f6, #2563eb, #172554)";
+                } else if (code >= 50) {
+                    // Yağmurlu: Gri Mavi
                     gradient = "linear-gradient(to bottom right, #475569, #334155, #1e293b)";
                 } else {
-                    gradient = "linear-gradient(to bottom right, #64748b, #475569, #334155)";
+                    // Bulutlu: Yumuşak
+                    gradient = "linear-gradient(to bottom right, #64748b, #475569, #1e293b)";
                 }
             }
             bg.style.background = gradient;
@@ -388,14 +406,14 @@
             const maxTemp = Math.max(...temps) + 2;
             const range = maxTemp - minTemp;
 
-            // 1. Noktaları Hesapla
+            // Bezier Curve Points
             const points = temps.map((t, i) => {
                 const x = (i * CONFIG.hourWidth) + (CONFIG.hourWidth / 2);
-                const y = height - ((t - minTemp) / range * (height - 40)) - 20; // Padding
+                const y = height - ((t - minTemp) / range * (height - 40)) - 20; 
                 return { x, y, temp: t };
             });
 
-            // 2. Yumuşak Çizgi (Cubic Bezier)
+            // Cubic Bezier Path
             let pathD = `M ${points[0].x} ${points[0].y}`;
             for (let i = 0; i < points.length - 1; i++) {
                 const p0 = points[i];
@@ -406,13 +424,12 @@
                 const cp2y = p1.y;
                 pathD += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${p1.x} ${p1.y}`;
             }
-
             const areaD = `${pathD} L ${points[points.length-1].x} ${height} L ${points[0].x} ${height} Z`;
 
             document.getElementById('chart-line-path').setAttribute('d', pathD);
             document.getElementById('chart-area-path').setAttribute('d', areaD);
 
-            // 3. Noktaları, Dereceleri ve Yağış Barlarını Çiz
+            // Elements
             while(svg.lastChild && (svg.lastChild.tagName === 'circle' || svg.lastChild.tagName === 'text')) {
                 svg.removeChild(svg.lastChild);
             }
@@ -437,7 +454,7 @@
                 circle.setAttribute("cy", p.y);
                 circle.setAttribute("r", "4");
                 circle.setAttribute("fill", "#fff");
-                circle.setAttribute("stroke", "rgba(255,255,255,0.5)");
+                circle.setAttribute("stroke", "rgba(255,255,255,0.3)");
                 circle.setAttribute("stroke-width", "2");
                 svg.appendChild(circle);
 
@@ -452,7 +469,7 @@
                 svg.appendChild(text);
             });
 
-            // 4. Alt Etiketler
+            // HTML Labels
             labelsContainer.innerHTML = '';
             data.forEach((d, i) => {
                 const info = getCodeInfo(d.code);
@@ -461,8 +478,8 @@
                 div.style.width = `${CONFIG.hourWidth}px`;
                 div.innerHTML = `
                     <span class="text-[11px] text-white/60 mb-1 font-medium">${new Date(d.time).getHours()}:00</span>
-                    <i class="ph-fill ${d.isDay ? info.icon : (d.code <= 2 ? 'ph-moon-stars' : info.icon)} text-xl text-white/80"></i>
-                    ${d.precipProb > 0 ? `<span class="text-[9px] text-blue-300 mt-1">%${d.precipProb}</span>` : ''}
+                    <i class="ph-fill ${d.isDay ? info.icon : (d.code <= 2 ? 'ph-moon-stars' : info.icon)} text-xl text-white/90"></i>
+                    ${d.precipProb > 0 ? `<span class="text-[9px] text-blue-300 mt-1 font-bold">%${d.precipProb}</span>` : ''}
                 `;
                 labelsContainer.appendChild(div);
             });
@@ -475,7 +492,8 @@
             loader.style.zIndex = '50';
 
             try {
-                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,weather_code,wind_speed_10m,surface_pressure,visibility&hourly=temperature_2m,weather_code,is_day,precipitation_probability&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max,precipitation_probability_max,wind_speed_10m_max&timezone=auto`;
+                // Wind Direction eklendi
+                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,weather_code,wind_speed_10m,wind_direction_10m,surface_pressure,visibility&hourly=temperature_2m,weather_code,is_day,precipitation_probability&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max,precipitation_probability_max,wind_speed_10m_max&timezone=auto`;
                 
                 const res = await fetch(url);
                 const data = await res.json();
@@ -495,11 +513,26 @@
                 document.getElementById('feels-like').innerText = Math.round(curr.apparent_temperature) + "°";
                 document.getElementById('humidity').innerText = "%" + curr.relative_humidity_2m;
                 document.getElementById('wind').innerText = Math.round(curr.wind_speed_10m) + " km/s";
+                
+                // Rüzgar Yönü
+                const windIcon = document.getElementById('wind-icon');
+                if(curr.wind_direction_10m) {
+                    windIcon.style.transform = `rotate(${curr.wind_direction_10m}deg)`;
+                }
+
                 document.getElementById('min-max').innerText = `${Math.round(daily.temperature_2m_min[0])}° / ${Math.round(daily.temperature_2m_max[0])}°`;
 
                 const mainIcon = document.getElementById('main-icon');
-                // RENGİ BURADA info.color ile ayarlıyoruz, hardcoded yellow-400 kaldırıldı.
-                mainIcon.className = `ph-fill ${curr.is_day ? info.icon : (curr.weather_code <= 2 ? 'ph-moon-stars' : info.icon)} text-[9rem] md:text-[12rem] drop-shadow-2xl animate-float opacity-90 ${curr.is_day ? info.color : 'text-white'}`;
+                // BEYAZ BULUT AYARI:
+                // isDay ve weather_code kullanarak rengi belirliyoruz.
+                // Eğer bulutluysa (code 1,2,3,45) -> text-white
+                // Eğer güneşli (0) ve gündüz -> text-yellow-400
+                let iconColorClass = "text-white";
+                if (curr.is_day && curr.weather_code === 0) {
+                    iconColorClass = "text-yellow-400";
+                }
+
+                mainIcon.className = `ph-fill ${curr.is_day ? info.icon : (curr.weather_code <= 2 ? 'ph-moon-stars' : info.icon)} text-[9rem] md:text-[12rem] drop-shadow-2xl animate-float opacity-90 ${iconColorClass}`;
 
                 updateBackground(curr.is_day, curr.weather_code);
 
@@ -536,12 +569,16 @@
                     const dMin = Math.round(daily.temperature_2m_min[i]);
                     const dInfo = getCodeInfo(daily.weather_code[i]);
                     
+                    // Beyaz ikon bulutlu günler için
+                    let dIconColor = "text-white";
+                    if (daily.weather_code[i] === 0) dIconColor = "text-yellow-400"; // Güneş ise sarı kalsın
+
                     const row = document.createElement('div');
-                    row.className = "glass-card bg-white/5 border-white/10 rounded-xl overflow-hidden transition hover:bg-white/10";
+                    row.className = "glass-card bg-white/5 border-white/5 rounded-xl overflow-hidden transition hover:bg-white/10";
                     row.innerHTML = `
                         <div class="flex items-center justify-between p-4 cursor-pointer" onclick="toggleDaily(${i})">
                             <div class="flex items-center gap-4">
-                                <i class="ph-fill ${dInfo.icon} text-2xl text-white"></i>
+                                <i class="ph-fill ${dInfo.icon} text-2xl ${dIconColor}"></i>
                                 <span class="font-semibold w-24">${dDate.toLocaleDateString('tr-TR', {weekday: 'long'})}</span>
                             </div>
                             <div class="flex items-center gap-4">
@@ -549,7 +586,7 @@
                                     <span class="font-bold text-lg">${dMax}°</span>
                                     <span class="text-white/50 text-sm ml-1">${dMin}°</span>
                                 </div>
-                                <i id="chevron-${i}" class="ph ph-caret-down text-white/50 transition-transform duration-300"></i>
+                                <i id="chevron-${i}" class="ph ph-caret-down text-white/50 chevron-icon"></i>
                             </div>
                         </div>
                         <div id="details-${i}" class="details-content bg-black/20">
@@ -586,9 +623,8 @@
             }
         }
 
-        // AKORDİYON FONKSİYONU (Diğerlerini kapatır)
+        // AKORDİYON (Auto-Close Logic)
         function toggleDaily(i) {
-            // Diğer tüm açık olanları kapat
             for (let j = 1; j < 7; j++) {
                 if (j !== i) {
                     const content = document.getElementById(`details-${j}`);
@@ -600,7 +636,6 @@
                 }
             }
 
-            // Tıklananı aç/kapa
             const currentContent = document.getElementById(`details-${i}`);
             const currentChevron = document.getElementById(`chevron-${i}`);
             currentContent.classList.toggle('open');
@@ -627,7 +662,7 @@
                     if(data.results) {
                         data.results.forEach(city => {
                             const div = document.createElement('div');
-                            div.className = "p-3 hover:bg-white/10 cursor-pointer border-b border-white/5 flex justify-between items-center";
+                            div.className = "p-3 hover:bg-white/10 cursor-pointer border-b border-white/5 flex justify-between items-center text-sm";
                             div.innerHTML = `<span>${city.name}</span><span class="text-xs text-white/50">${city.country || ''}</span>`;
                             div.onclick = () => {
                                 searchInput.value = '';
@@ -642,12 +677,37 @@
             }, 400);
         });
 
-        window.addEventListener('DOMContentLoaded', () => {
+        // Konum Alma (IP ve GPS)
+        function getLocationByIP() {
+            // Önce tarayıcı GPS'i dene, olmazsa IP'ye düş
+            if (navigator.geolocation) {
+                document.getElementById('loader').style.opacity = '1';
+                document.getElementById('loader').style.zIndex = '50';
+                
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        // Ters Geocoding ile şehir adını bulabiliriz ama basitlik için "Konumum" yazıyoruz
+                        // veya koordinatları direkt weather API'ye atıyoruz.
+                        getWeatherData(position.coords.latitude, position.coords.longitude, "Konumum", "");
+                    },
+                    (error) => {
+                        console.warn("GPS izni verilmedi, IP kullanılıyor.");
+                        fetchIPLocation();
+                    }
+                );
+            } else {
+                fetchIPLocation();
+            }
+        }
+
+        function fetchIPLocation() {
             fetch('https://ipapi.co/json/')
                 .then(res => res.json())
                 .then(data => getWeatherData(data.latitude, data.longitude, data.city, data.country_name))
                 .catch(() => getWeatherData(41.0082, 28.9784, "İstanbul", "Türkiye"));
-        });
+        }
+
+        window.addEventListener('DOMContentLoaded', fetchIPLocation);
     </script>
 </body>
 </html>
