@@ -135,7 +135,6 @@
     <main id="app-content" class="w-full max-w-6xl p-4 md:p-8 opacity-0 transition-opacity duration-700">
 
         <!-- Üst Kısım -->
-        <!-- DÜZELTME: 'relative z-50' sınıfları eklendi, böylece dropdown menü alttaki grid yapısının üzerinde kalacak -->
         <header class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8 animate-slide-up relative z-50">
             <div>
                 <div class="flex items-center gap-2 text-blue-300 mb-1">
@@ -307,7 +306,6 @@
         };
 
         // İkon ve Renk Haritası
-        // Bulutlu durumlar için renk 'text-white' yapıldı.
         const weatherCodes = {
             0: { desc: "Açık", icon: "ph-sun", color: "text-yellow-400" },
             1: { desc: "Az Bulutlu", icon: "ph-cloud-sun", color: "text-white" },
@@ -336,17 +334,13 @@
             let gradient = "";
 
             if (!isDay) {
-                // Gece Teması
                 gradient = "linear-gradient(to bottom right, #020617, #1e1b4b, #0f172a)";
             } else {
                 if (code <= 2) {
-                    // Güneşli: Canlı Mavi
                     gradient = "linear-gradient(to bottom right, #3b82f6, #2563eb, #172554)";
                 } else if (code >= 50) {
-                    // Yağmurlu: Gri Mavi
                     gradient = "linear-gradient(to bottom right, #475569, #334155, #1e293b)";
                 } else {
-                    // Bulutlu: Yumuşak
                     gradient = "linear-gradient(to bottom right, #64748b, #475569, #1e293b)";
                 }
             }
@@ -407,14 +401,12 @@
             const maxTemp = Math.max(...temps) + 2;
             const range = maxTemp - minTemp;
 
-            // Bezier Curve Points
             const points = temps.map((t, i) => {
                 const x = (i * CONFIG.hourWidth) + (CONFIG.hourWidth / 2);
                 const y = height - ((t - minTemp) / range * (height - 40)) - 20; 
                 return { x, y, temp: t };
             });
 
-            // Cubic Bezier Path
             let pathD = `M ${points[0].x} ${points[0].y}`;
             for (let i = 0; i < points.length - 1; i++) {
                 const p0 = points[i];
@@ -430,7 +422,6 @@
             document.getElementById('chart-line-path').setAttribute('d', pathD);
             document.getElementById('chart-area-path').setAttribute('d', areaD);
 
-            // Elements
             while(svg.lastChild && (svg.lastChild.tagName === 'circle' || svg.lastChild.tagName === 'text')) {
                 svg.removeChild(svg.lastChild);
             }
@@ -470,7 +461,6 @@
                 svg.appendChild(text);
             });
 
-            // HTML Labels
             labelsContainer.innerHTML = '';
             data.forEach((d, i) => {
                 const info = getCodeInfo(d.code);
@@ -493,18 +483,15 @@
             loader.style.zIndex = '50';
 
             try {
-                // Wind Direction eklendi
                 const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,weather_code,wind_speed_10m,wind_direction_10m,surface_pressure,visibility&hourly=temperature_2m,weather_code,is_day,precipitation_probability&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max,precipitation_probability_max,wind_speed_10m_max&timezone=auto`;
                 
                 const res = await fetch(url);
                 const data = await res.json();
 
-                // Header
                 document.getElementById('location-city').innerText = cityName;
                 document.getElementById('location-country').innerText = country || "";
                 document.getElementById('current-date').innerText = new Date().toLocaleDateString('tr-TR', { weekday: 'long', day: 'numeric', month: 'long' });
 
-                // Main Card
                 const curr = data.current;
                 const info = getCodeInfo(curr.weather_code);
                 const daily = data.daily;
@@ -515,7 +502,6 @@
                 document.getElementById('humidity').innerText = "%" + curr.relative_humidity_2m;
                 document.getElementById('wind').innerText = Math.round(curr.wind_speed_10m) + " km/s";
                 
-                // Rüzgar Yönü
                 const windIcon = document.getElementById('wind-icon');
                 if(curr.wind_direction_10m) {
                     windIcon.style.transform = `rotate(${curr.wind_direction_10m}deg)`;
@@ -524,10 +510,6 @@
                 document.getElementById('min-max').innerText = `${Math.round(daily.temperature_2m_min[0])}° / ${Math.round(daily.temperature_2m_max[0])}°`;
 
                 const mainIcon = document.getElementById('main-icon');
-                // BEYAZ BULUT AYARI:
-                // isDay ve weather_code kullanarak rengi belirliyoruz.
-                // Eğer bulutluysa (code 1,2,3,45) -> text-white
-                // Eğer güneşli (0) ve gündüz -> text-yellow-400
                 let iconColorClass = "text-white";
                 if (curr.is_day && curr.weather_code === 0) {
                     iconColorClass = "text-yellow-400";
@@ -537,14 +519,12 @@
 
                 updateBackground(curr.is_day, curr.weather_code);
 
-                // Details
                 document.getElementById('uv-index').innerText = daily.uv_index_max[0];
                 document.getElementById('visibility').innerText = (curr.visibility / 1000).toFixed(1) + " km";
                 document.getElementById('pressure').innerText = Math.round(curr.surface_pressure) + " hPa";
                 const sunrise = new Date(daily.sunrise[0]).toLocaleTimeString('tr-TR', {hour:'2-digit', minute:'2-digit'});
                 document.getElementById('sunrise').innerText = sunrise;
 
-                // 24h Chart Data
                 const hourlyArr = [];
                 const now = new Date();
                 for(let i=0; i < data.hourly.time.length; i++) {
@@ -561,7 +541,6 @@
                 }
                 renderChart(hourlyArr);
 
-                // Daily List
                 const dailyList = document.getElementById('daily-list');
                 dailyList.innerHTML = '';
                 for(let i=1; i<7; i++) {
@@ -570,9 +549,8 @@
                     const dMin = Math.round(daily.temperature_2m_min[i]);
                     const dInfo = getCodeInfo(daily.weather_code[i]);
                     
-                    // Beyaz ikon bulutlu günler için
                     let dIconColor = "text-white";
-                    if (daily.weather_code[i] === 0) dIconColor = "text-yellow-400"; // Güneş ise sarı kalsın
+                    if (daily.weather_code[i] === 0) dIconColor = "text-yellow-400";
 
                     const row = document.createElement('div');
                     row.className = "glass-card bg-white/5 border-white/5 rounded-xl overflow-hidden transition hover:bg-white/10";
@@ -624,7 +602,6 @@
             }
         }
 
-        // AKORDİYON (Auto-Close Logic)
         function toggleDaily(i) {
             for (let j = 1; j < 7; j++) {
                 if (j !== i) {
@@ -643,7 +620,6 @@
             currentChevron.style.transform = currentContent.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)';
         }
 
-        // Arama
         const searchInput = document.getElementById('search-input');
         const searchResults = document.getElementById('search-results');
         let searchTimer;
@@ -680,19 +656,32 @@
 
         // Konum Alma (IP ve GPS)
         function getLocationByIP() {
-            // Önce tarayıcı GPS'i dene, olmazsa IP'ye düş
             if (navigator.geolocation) {
-                document.getElementById('loader').style.opacity = '1';
-                document.getElementById('loader').style.zIndex = '50';
+                const loader = document.getElementById('loader');
+                loader.style.opacity = '1';
+                loader.style.zIndex = '50';
                 
                 navigator.geolocation.getCurrentPosition(
-                    (position) => {
-                        // Ters Geocoding ile şehir adını bulabiliriz ama basitlik için "Konumum" yazıyoruz
-                        // veya koordinatları direkt weather API'ye atıyoruz.
-                        getWeatherData(position.coords.latitude, position.coords.longitude, "Konumum", "");
+                    async (position) => {
+                        const lat = position.coords.latitude;
+                        const lon = position.coords.longitude;
+
+                        try {
+                            // BigDataCloud ile Ters Coğrafi Kodlama
+                            const response = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=tr`);
+                            const data = await response.json();
+                            
+                            const city = data.city || data.locality || data.principalSubdivision || "Bilinmeyen Konum";
+                            const country = data.countryName || "";
+
+                            getWeatherData(lat, lon, city, country);
+                        } catch (error) {
+                            console.error("Şehir ismi bulunamadı:", error);
+                            getWeatherData(lat, lon, `${lat.toFixed(2)}, ${lon.toFixed(2)}`, ""); 
+                        }
                     },
                     (error) => {
-                        console.warn("GPS izni verilmedi, IP kullanılıyor.");
+                        console.warn("GPS izni verilmedi veya hata:", error);
                         fetchIPLocation();
                     }
                 );
